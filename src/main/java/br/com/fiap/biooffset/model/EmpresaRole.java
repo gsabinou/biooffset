@@ -2,7 +2,8 @@ package br.com.fiap.biooffset.model;
 
 public enum EmpresaRole {
     DESENVOLVEDOR("desenvolvedor"),
-    COMPRADOR("comprador");
+    COMPRADOR("comprador"),
+    ADMIN("admin");
 
     private String role;
 

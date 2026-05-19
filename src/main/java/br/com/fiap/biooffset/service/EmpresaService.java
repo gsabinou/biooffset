@@ -24,16 +24,16 @@ public class EmpresaService {
         BeanUtils.copyProperties(empresaCadastroDTO, empresa);
 
         Empresa empresaSalva = empresaRepository.save(empresa);
-        return new EmpresaExibicaoDTO(empresa);
+        return new EmpresaExibicaoDTO(empresaSalva);
     }
 
-    public EmpresaExibicaoDTO buscarPorRazaoSocial(String razaoSocial) {
-        Optional<Empresa> empresaOptional = empresaRepository.findByRazaoSocial(razaoSocial);
+    public EmpresaExibicaoDTO buscarPorCnpj(String cnpj) {
+        Optional<Empresa> empresaOptional = empresaRepository.findByCnpj(cnpj);
 
         if (empresaOptional.isPresent()) {
             return new EmpresaExibicaoDTO(empresaOptional.get());
         } else {
-            throw new EmpresaNotFoundException("Usuário não encontrado.");
+            throw new EmpresaNotFoundException("Empresa não encontrada.");
         }
     }
 
@@ -43,6 +43,28 @@ public class EmpresaService {
                 .stream()
                 .map(EmpresaExibicaoDTO::new)
                 .toList();
+    }
+
+    public EmpresaExibicaoDTO atualizar(EmpresaCadastroDTO empresaCadastroDTO) {
+        Optional<Empresa> empresaOptional = empresaRepository.findById(empresaCadastroDTO.id());
+
+        if (empresaOptional.isPresent()) {
+            Empresa empresa = new Empresa();
+            BeanUtils.copyProperties(empresaCadastroDTO, empresa);
+            return new EmpresaExibicaoDTO(empresaRepository.save(empresa));
+        } else {
+            throw new EmpresaNotFoundException("Empresa não encontrada.");
+        }
+    }
+
+    public void deletar(String cnpj) {
+        Optional<Empresa> empresaOptional = empresaRepository.findByCnpj(cnpj);
+
+        if (empresaOptional.isPresent()) {
+            empresaRepository.delete(empresaOptional.get());
+        } else {
+            throw new EmpresaNotFoundException("CNPJ não encontrado.");
+        }
     }
 
 
