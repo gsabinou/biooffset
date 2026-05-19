@@ -10,6 +10,8 @@ import br.com.fiap.biooffset.repository.EmpresaRepository;
 import br.com.fiap.biooffset.repository.ProjetoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,12 +45,10 @@ public class EmpresaService {
         }
     }
 
-    public List<EmpresaExibicaoDTO> listarTodas() {
+    public Page<EmpresaExibicaoDTO> listarTodas(Pageable paginacao) {
         return empresaRepository
-                .findAll()
-                .stream()
-                .map(EmpresaExibicaoDTO::new)
-                .toList();
+                .findAll(paginacao)
+                .map(EmpresaExibicaoDTO::new);
     }
 
     public EmpresaExibicaoDTO atualizar(EmpresaCadastroDTO empresaCadastroDTO) {
@@ -86,6 +86,5 @@ public class EmpresaService {
             throw new EmpresaNotFoundException("Empresa não encontrada.");
         }
     }
-
 
 }

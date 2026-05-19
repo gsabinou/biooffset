@@ -10,6 +10,8 @@ import br.com.fiap.biooffset.repository.EmpresaRepository;
 import br.com.fiap.biooffset.repository.ProjetoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,12 +41,10 @@ public class ProjetoService {
         }
     }
 
-    public List<ProjetoExibicaoDTO> listarTodos() {
+    public Page<ProjetoExibicaoDTO> listarTodos(Pageable paginacao) {
         return projetoRepository
-                .findAll()
-                .stream()
-                .map(ProjetoExibicaoDTO::new)
-                .toList();
+                .findAll(paginacao)
+                .map(ProjetoExibicaoDTO::new);
     }
 
     public ProjetoExibicaoDTO buscarPorNome(String nome) {

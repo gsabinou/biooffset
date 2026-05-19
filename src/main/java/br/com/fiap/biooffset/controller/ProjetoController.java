@@ -5,6 +5,9 @@ import br.com.fiap.biooffset.dto.ProjetoExibicaoDTO;
 import br.com.fiap.biooffset.service.ProjetoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +29,9 @@ public class ProjetoController {
 
     @GetMapping("/projetos")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProjetoExibicaoDTO> listarTodos() {
-        return projetoService.listarTodos();
+    public Page<ProjetoExibicaoDTO> listarTodos(
+            @PageableDefault(size = 2, page = 0) Pageable paginacao) {
+        return projetoService.listarTodos(paginacao);
     }
 
     @GetMapping(value = "/projetos", params = "nome")
