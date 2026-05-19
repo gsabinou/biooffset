@@ -6,12 +6,12 @@ import br.com.fiap.biooffset.model.Status;
 
 public record ProjetoExibicaoDTO(
         Long id,
-        String empresaDesenvolvedora,
+        Long empresaDesenvolvedora,
         String nome,
         String descricao,
         Biomas bioma,
-        Float latitude,
-        Float longitude,
+        Double latitude,
+        Double longitude,
         Status status
 ) {
     public ProjetoExibicaoDTO(Projeto projeto) {

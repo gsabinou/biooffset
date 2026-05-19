@@ -26,7 +26,7 @@ public class Projeto {
     private Long id;
 
     @Column(name = "empresa_desenvolvedora_id")
-    private String empresaDesenvolvedora;
+    private Long empresaDesenvolvedora;
 
     @Column(name = "ds_nome")
     private String nome;
@@ -39,10 +39,10 @@ public class Projeto {
     private Biomas bioma;
 
     @Column(name = "nr_latitude")
-    private Float latitude;
+    private Double latitude;
 
     @Column(name = "nr_longitude")
-    private Float longitude;
+    private Double longitude;
 
     @Column(name = "st_status")
     @Enumerated(EnumType.STRING)

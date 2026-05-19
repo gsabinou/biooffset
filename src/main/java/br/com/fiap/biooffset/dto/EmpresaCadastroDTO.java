@@ -2,6 +2,7 @@ package br.com.fiap.biooffset.dto;
 
 import br.com.fiap.biooffset.model.EmpresaRole;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record EmpresaCadastroDTO(
@@ -18,7 +19,7 @@ public record EmpresaCadastroDTO(
         @Size(min = 8, max = 20, message = "A senha deve conter entre 8 a 20 caracteres!")
         String senha,
 
-        @NotBlank(message = "Por favor, informe se a sua empresa é compradora ou desenvolvedora.")
+        @NotNull(message = "Por favor, informe se a sua empresa é compradora ou desenvolvedora.")
         EmpresaRole role
 
 ) {

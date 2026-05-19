@@ -3,12 +3,13 @@ package br.com.fiap.biooffset.dto;
 import br.com.fiap.biooffset.model.Biomas;
 import br.com.fiap.biooffset.model.Status;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record ProjetoCadastroDTO(
         Long id,
 
-        @NotBlank(message = "A empresa desenvolvedora deve ser informada.")
-        String empresaDesenvolvedora,
+        @NotNull(message = "A empresa desenvolvedora deve ser informada.")
+        Long empresaDesenvolvedora,
 
         @NotBlank(message = "O projeto deve ter um nome.")
         String nome,
@@ -16,16 +17,16 @@ public record ProjetoCadastroDTO(
         @NotBlank(message = "É obrigatório adicionar uma descrição.")
         String descricao,
 
-        @NotBlank(message = "O bioma deve ser informado.")
+        @NotNull(message = "O bioma deve ser informado.")
         Biomas bioma,
 
-        @NotBlank(message = "A latitude é obrigatória.")
-        Float latitude,
+        @NotNull(message = "A latitude é obrigatória.")
+        Double latitude,
 
-        @NotBlank(message = "A longitude é obrigatória.")
-        Float longitude,
+        @NotNull(message = "A longitude é obrigatória.")
+        Double longitude,
 
-        @NotBlank(message = "Por favor, informe o status do projeto.")
+        @NotNull(message = "Por favor, informe o status do projeto.")
         Status status
 ) {
 }
