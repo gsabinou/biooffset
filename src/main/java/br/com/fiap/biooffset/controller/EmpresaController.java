@@ -2,6 +2,7 @@ package br.com.fiap.biooffset.controller;
 
 import br.com.fiap.biooffset.dto.EmpresaCadastroDTO;
 import br.com.fiap.biooffset.dto.EmpresaExibicaoDTO;
+import br.com.fiap.biooffset.dto.ProjetoExibicaoDTO;
 import br.com.fiap.biooffset.service.EmpresaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,4 +51,9 @@ public class EmpresaController {
         empresaService.deletar(cnpj);
     }
 
+    @GetMapping(value = "/empresas/projetos/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ProjetoExibicaoDTO>> listarProjetos(@PathVariable Long id) {
+        return ResponseEntity.ok(empresaService.listarProjetos(id));
+    }
 }

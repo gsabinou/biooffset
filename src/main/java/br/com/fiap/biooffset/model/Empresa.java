@@ -3,6 +3,9 @@ package br.com.fiap.biooffset.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,5 +40,8 @@ public class Empresa {
     @Column(name = "tip_empresa")
     @Enumerated(EnumType.STRING)
     private EmpresaRole role;
+
+    @OneToMany(mappedBy = "empresaDesenvolvedora", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Projeto> projetos = new ArrayList<>();
 }
 

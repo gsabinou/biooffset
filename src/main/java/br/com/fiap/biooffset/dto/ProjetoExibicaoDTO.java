@@ -17,7 +17,7 @@ public record ProjetoExibicaoDTO(
     public ProjetoExibicaoDTO(Projeto projeto) {
         this(
                 projeto.getId(),
-                projeto.getEmpresaDesenvolvedora(),
+                projeto.getEmpresaDesenvolvedora().getId(),
                 projeto.getNome(),
                 projeto.getDescricao(),
                 projeto.getBioma(),

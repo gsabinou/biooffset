@@ -25,8 +25,9 @@ public class Projeto {
     )
     private Long id;
 
-    @Column(name = "empresa_desenvolvedora_id")
-    private Long empresaDesenvolvedora;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_desenvolvedora_id")
+    private Empresa empresaDesenvolvedora;
 
     @Column(name = "ds_nome")
     private String nome;

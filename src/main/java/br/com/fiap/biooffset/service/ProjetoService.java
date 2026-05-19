@@ -2,8 +2,11 @@ package br.com.fiap.biooffset.service;
 
 import br.com.fiap.biooffset.dto.ProjetoCadastroDTO;
 import br.com.fiap.biooffset.dto.ProjetoExibicaoDTO;
+import br.com.fiap.biooffset.exceptions.EmpresaNotFoundException;
 import br.com.fiap.biooffset.exceptions.ProjetoNotFoundException;
+import br.com.fiap.biooffset.model.Empresa;
 import br.com.fiap.biooffset.model.Projeto;
+import br.com.fiap.biooffset.repository.EmpresaRepository;
 import br.com.fiap.biooffset.repository.ProjetoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +21,22 @@ public class ProjetoService {
     @Autowired
     private ProjetoRepository projetoRepository;
 
+    @Autowired
+    private EmpresaRepository empresaRepository;
+
     public ProjetoExibicaoDTO criarProjeto(ProjetoCadastroDTO projetoDTO) {
 
         Projeto projeto = new Projeto();
         BeanUtils.copyProperties(projetoDTO, projeto);
 
-        Projeto projetoSalvo = projetoRepository.save(projeto);
-        return new ProjetoExibicaoDTO(projetoSalvo);
+        Optional<Empresa> empresa = empresaRepository.findById(projetoDTO.empresaDesenvolvedora());
+        if (empresa.isPresent()) {
+            projeto.setEmpresaDesenvolvedora(empresa.get());
+            Projeto projetoSalvo = projetoRepository.save(projeto);
+            return new ProjetoExibicaoDTO(projetoSalvo);
+        } else {
+            throw new EmpresaNotFoundException("Empresa desenvolvedora não encontrada.");
+        }
     }
 
     public List<ProjetoExibicaoDTO> listarTodos() {
@@ -51,7 +63,15 @@ public class ProjetoService {
         if (projetoOptional.isPresent()) {
             Projeto projeto = new Projeto();
             BeanUtils.copyProperties(projetoDTO, projeto);
-            return new ProjetoExibicaoDTO(projetoRepository.save(projeto));
+
+            Optional<Empresa> empresa = empresaRepository.findById(projetoDTO.empresaDesenvolvedora());
+            if (empresa.isPresent()) {
+                projeto.setEmpresaDesenvolvedora(empresa.get());
+                Projeto projetoSalvo = projetoRepository.save(projeto);
+                return new ProjetoExibicaoDTO(projetoSalvo);
+            } else {
+                throw new EmpresaNotFoundException("Empresa desenvolvedora não encontrada.");
+            }
         } else {
             throw new ProjetoNotFoundException("Projeto não encontrado.");
         }
