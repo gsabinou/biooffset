@@ -1,11 +1,14 @@
 package br.com.fiap.biooffset.service;
 
+import br.com.fiap.biooffset.dto.CreditoExibicaoDTO;
 import br.com.fiap.biooffset.dto.ProjetoCadastroDTO;
 import br.com.fiap.biooffset.dto.ProjetoExibicaoDTO;
 import br.com.fiap.biooffset.exceptions.EmpresaNotFoundException;
 import br.com.fiap.biooffset.exceptions.ProjetoNotFoundException;
+import br.com.fiap.biooffset.model.CreditoCarbono;
 import br.com.fiap.biooffset.model.Empresa;
 import br.com.fiap.biooffset.model.Projeto;
+import br.com.fiap.biooffset.repository.CreditoCarbonoRepository;
 import br.com.fiap.biooffset.repository.EmpresaRepository;
 import br.com.fiap.biooffset.repository.ProjetoRepository;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +28,9 @@ public class ProjetoService {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+
+    @Autowired
+    private CreditoCarbonoRepository creditoCarbonoRepository;
 
     public ProjetoExibicaoDTO criarProjeto(ProjetoCadastroDTO projetoDTO) {
 
@@ -86,4 +92,16 @@ public class ProjetoService {
             throw new ProjetoNotFoundException("Projeto não existe.");
         }
     }
+
+    public Page<CreditoExibicaoDTO> listarCreditos(Long id, Pageable paginacao) {
+        Optional<Projeto> projetoOptional = projetoRepository.findById(id);
+
+        if (projetoOptional.isPresent()) {
+            return creditoCarbonoRepository.findByProjetoId_Id(id, paginacao)
+                    .map(CreditoExibicaoDTO::new);
+        } else {
+            throw new ProjetoNotFoundException("Projeto não encontrado.");
+        }
+    }
+
 }

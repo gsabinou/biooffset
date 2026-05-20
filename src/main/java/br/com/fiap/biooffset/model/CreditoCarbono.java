@@ -3,6 +3,9 @@ package br.com.fiap.biooffset.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -43,4 +46,7 @@ public class CreditoCarbono {
 
     @Column(name = "vl_unitario")
     private Double valorUnitario;
+
+    @OneToMany(mappedBy = "creditoId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transacao> transacoes = new ArrayList<>();
 }

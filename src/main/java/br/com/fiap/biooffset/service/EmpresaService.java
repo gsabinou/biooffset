@@ -73,14 +73,12 @@ public class EmpresaService {
         }
     }
 
-    public List<ProjetoExibicaoDTO> listarProjetos(Long id) {
+    public Page<ProjetoExibicaoDTO> listarProjetos(Long id, Pageable paginacao) {
         Optional<Empresa> empresaOptional = empresaRepository.findById(id);
 
         if (empresaOptional.isPresent()) {
-            List<Projeto> projetos = projetoRepository.findByEmpresaDesenvolvedora_Id(id);
-            return projetos.stream()
-                    .map(ProjetoExibicaoDTO::new)
-                    .toList();
+            return projetoRepository.findByEmpresaDesenvolvedora_Id(id, paginacao)
+                    .map(ProjetoExibicaoDTO::new);
 
         } else {
             throw new EmpresaNotFoundException("Empresa não encontrada.");

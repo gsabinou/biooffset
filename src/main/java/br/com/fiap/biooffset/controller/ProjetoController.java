@@ -1,5 +1,6 @@
 package br.com.fiap.biooffset.controller;
 
+import br.com.fiap.biooffset.dto.CreditoExibicaoDTO;
 import br.com.fiap.biooffset.dto.ProjetoCadastroDTO;
 import br.com.fiap.biooffset.dto.ProjetoExibicaoDTO;
 import br.com.fiap.biooffset.service.ProjetoService;
@@ -50,5 +51,12 @@ public class ProjetoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
         projetoService.deletar(id);
+    }
+
+    @GetMapping("/projetos/creditos/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Page<CreditoExibicaoDTO>> listarCreditos(
+            @PathVariable Long id, @PageableDefault(size = 3, page = 0) Pageable paginacao) {
+        return ResponseEntity.ok(projetoService.listarCreditos(id, paginacao));
     }
 }

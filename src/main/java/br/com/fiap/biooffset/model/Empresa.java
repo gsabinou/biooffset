@@ -43,5 +43,8 @@ public class Empresa {
 
     @OneToMany(mappedBy = "empresaDesenvolvedora", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Projeto> projetos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "empresaCompradoraId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transacao> transacoes = new ArrayList<>();
 }
 

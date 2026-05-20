@@ -57,7 +57,8 @@ public class EmpresaController {
 
     @GetMapping(value = "/empresas/projetos/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ProjetoExibicaoDTO>> listarProjetos(@PathVariable Long id) {
-        return ResponseEntity.ok(empresaService.listarProjetos(id));
+    public ResponseEntity<Page<ProjetoExibicaoDTO>> listarProjetos(
+            @PathVariable Long id, @PageableDefault(size = 2, page = 0) Pageable paginacao) {
+        return ResponseEntity.ok(empresaService.listarProjetos(id, paginacao));
     }
 }
