@@ -47,6 +47,7 @@ public class TransacaoService {
                         transacaoDTO.creditoId(),
                         transacao.getQuantidadeComprada()));
 
+                realizarBaixaDeEstoque(transacaoDTO.creditoId(), transacao.getQuantidadeComprada());
                 return new TransacaoExibicaoDTO(transacaoRepository.save(transacao));
 
             } else {
@@ -60,6 +61,19 @@ public class TransacaoService {
     public Double calcularValorTotal(Long creditoId, Double quantidadeComprada) {
         Optional<CreditoCarbono> creditoCarbono = creditoCarbonoRepository.findById(creditoId);
         return quantidadeComprada * creditoCarbono.get().getValorUnitario();
+    }
+
+    public void realizarBaixaDeEstoque(Long id, Double quantidadeComprada) {
+        Optional<CreditoCarbono> creditoCarbonoOptional = creditoCarbonoRepository.findById(id);
+
+        if (creditoCarbonoOptional.isPresent()) {
+            CreditoCarbono creditoCarbono = creditoCarbonoOptional.get();
+            creditoCarbono.setQuantidadeDisponivel(
+                    creditoCarbono.getQuantidadeDisponivel() - quantidadeComprada);
+            creditoCarbonoRepository.save(creditoCarbono);
+        } else {
+            throw new CreditoNotFoundException("Crédito de carbono informado não encontrado.");
+        }
     }
 
 }

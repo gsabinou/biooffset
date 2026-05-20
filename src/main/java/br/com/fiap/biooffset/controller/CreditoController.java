@@ -2,6 +2,7 @@ package br.com.fiap.biooffset.controller;
 
 import br.com.fiap.biooffset.dto.CreditoCadastroDTO;
 import br.com.fiap.biooffset.dto.CreditoExibicaoDTO;
+import br.com.fiap.biooffset.dto.TransacaoExibicaoDTO;
 import br.com.fiap.biooffset.service.CreditoCarbonoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +34,12 @@ public class CreditoController {
     public Page<CreditoExibicaoDTO> listarTodosDisponiveis(
             @PageableDefault(size = 3, page = 0) Pageable paginacao) {
         return creditoCarbonoService.listarTodos(paginacao);
+    }
+
+    @GetMapping("/creditos-carbono/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Page<TransacaoExibicaoDTO>> listarTransacoes(
+            @PathVariable Long id, @PageableDefault(size = 2,page = 0) Pageable paginacao) {
+        return ResponseEntity.ok(creditoCarbonoService.listarTransacoes(id, paginacao));
     }
 }

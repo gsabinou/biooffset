@@ -2,19 +2,20 @@ package br.com.fiap.biooffset.service;
 
 import br.com.fiap.biooffset.dto.CreditoCadastroDTO;
 import br.com.fiap.biooffset.dto.CreditoExibicaoDTO;
+import br.com.fiap.biooffset.dto.TransacaoExibicaoDTO;
 import br.com.fiap.biooffset.exceptions.CreditoNotFoundException;
 import br.com.fiap.biooffset.exceptions.ProjetoNotFoundException;
 import br.com.fiap.biooffset.model.CreditoCarbono;
 import br.com.fiap.biooffset.model.Projeto;
 import br.com.fiap.biooffset.repository.CreditoCarbonoRepository;
 import br.com.fiap.biooffset.repository.ProjetoRepository;
+import br.com.fiap.biooffset.repository.TransacaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,9 @@ public class CreditoCarbonoService {
 
     @Autowired
     private ProjetoRepository projetoRepository;
+
+    @Autowired
+    private TransacaoRepository transacaoRepository;
 
     public CreditoExibicaoDTO criarCredito(CreditoCadastroDTO creditoDTO) {
 
@@ -48,16 +52,14 @@ public class CreditoCarbonoService {
                 .map(CreditoExibicaoDTO::new);
     }
 
-    public void realizarBaixaDeEstoque(Long id, Double quantidadeComprada) {
-        Optional<CreditoCarbono> creditoCarbonoOptional = creditoCarbonoRepository.findById(id);
+    public Page<TransacaoExibicaoDTO> listarTransacoes(Long id, Pageable paginacao) {
+        Optional<CreditoCarbono> creditoOptional = creditoCarbonoRepository.findById(id);
 
-        if (creditoCarbonoOptional.isPresent()) {
-            CreditoCarbono creditoCarbono = creditoCarbonoOptional.get();
-            creditoCarbono.setQuantidadeDisponivel(
-                    creditoCarbono.getQuantidadeDisponivel() - quantidadeComprada);
+        if (creditoOptional.isPresent()) {
+            return transacaoRepository.findByCreditoId_Id(id, paginacao)
+                    .map(TransacaoExibicaoDTO::new);
         } else {
-            throw new CreditoNotFoundException("Crédito de carbono informado não encontrado.");
+            throw new CreditoNotFoundException("Créditos de carbono não foram encontrados.");
         }
     }
-
 }

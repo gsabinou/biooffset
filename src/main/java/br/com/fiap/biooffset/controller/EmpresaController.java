@@ -3,6 +3,7 @@ package br.com.fiap.biooffset.controller;
 import br.com.fiap.biooffset.dto.EmpresaCadastroDTO;
 import br.com.fiap.biooffset.dto.EmpresaExibicaoDTO;
 import br.com.fiap.biooffset.dto.ProjetoExibicaoDTO;
+import br.com.fiap.biooffset.dto.TransacaoExibicaoDTO;
 import br.com.fiap.biooffset.service.EmpresaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,4 +62,12 @@ public class EmpresaController {
             @PathVariable Long id, @PageableDefault(size = 2, page = 0) Pageable paginacao) {
         return ResponseEntity.ok(empresaService.listarProjetos(id, paginacao));
     }
+
+    @GetMapping(value = "/empresas/transacoes/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Page<TransacaoExibicaoDTO>> listarTransacoes(
+            @PathVariable Long id, @PageableDefault(size = 2, page = 0) Pageable paginacao) {
+        return ResponseEntity.ok(empresaService.listarTransacoes(id, paginacao));
+    }
+
 }

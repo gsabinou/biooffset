@@ -3,11 +3,13 @@ package br.com.fiap.biooffset.service;
 import br.com.fiap.biooffset.dto.EmpresaCadastroDTO;
 import br.com.fiap.biooffset.dto.EmpresaExibicaoDTO;
 import br.com.fiap.biooffset.dto.ProjetoExibicaoDTO;
+import br.com.fiap.biooffset.dto.TransacaoExibicaoDTO;
 import br.com.fiap.biooffset.exceptions.EmpresaNotFoundException;
 import br.com.fiap.biooffset.model.Empresa;
 import br.com.fiap.biooffset.model.Projeto;
 import br.com.fiap.biooffset.repository.EmpresaRepository;
 import br.com.fiap.biooffset.repository.ProjetoRepository;
+import br.com.fiap.biooffset.repository.TransacaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,9 @@ public class EmpresaService {
 
     @Autowired
     private ProjetoRepository projetoRepository;
+
+    @Autowired
+    private TransacaoRepository transacaoRepository;
 
     public EmpresaExibicaoDTO criarEmpresa(EmpresaCadastroDTO empresaCadastroDTO) {
 
@@ -85,4 +90,14 @@ public class EmpresaService {
         }
     }
 
+    public Page<TransacaoExibicaoDTO> listarTransacoes(Long id, Pageable paginacao) {
+        Optional<Empresa> empresaOptional = empresaRepository.findById(id);
+
+        if (empresaOptional.isPresent()) {
+            return transacaoRepository.findByEmpresaCompradoraId_Id(id, paginacao)
+                    .map(TransacaoExibicaoDTO::new);
+        } else {
+            throw new EmpresaNotFoundException("Empresa não encontrada.");
+        }
+    }
 }
