@@ -2,8 +2,13 @@ package br.com.fiap.biooffset.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -13,7 +18,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 @Table(name = "bio_empresas")
-public class Empresa {
+public class Empresa implements UserDetails {
 
     @Id
     @Column(name = "id_empresa")
@@ -46,5 +51,59 @@ public class Empresa {
 
     @OneToMany(mappedBy = "empresaCompradoraId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transacao> transacoes = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == EmpresaRole.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_COMPRADOR"),
+                    new SimpleGrantedAuthority("ROLE_DESENVOLVEDOR")
+            );
+        }
+
+        else if (this.role == EmpresaRole.DESENVOLVEDOR) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_DESENVOLVEDOR"),
+                    new SimpleGrantedAuthority("ROLE_COMPRADOR")
+            );
+        }
+
+        return List.of(new SimpleGrantedAuthority("ROLE_COMPRADOR"));
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.cnpj;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
+    //NOTA: o ideal é fazer as verificações acima por meio de uma coluna booleana no bd.
+    // Estou usando essas classes apenas para praticar e aprender.
+    // Todos os métodos por padrão estão definidos como true.
 }
 

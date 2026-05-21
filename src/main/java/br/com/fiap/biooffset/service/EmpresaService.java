@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,16 +33,19 @@ public class EmpresaService {
     private TransacaoRepository transacaoRepository;
 
     public EmpresaExibicaoDTO criarEmpresa(EmpresaCadastroDTO empresaCadastroDTO) {
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(empresaCadastroDTO.senha());
 
         Empresa empresa = new Empresa();
         BeanUtils.copyProperties(empresaCadastroDTO, empresa);
+
+        empresa.setSenha(senhaCriptografada);
 
         Empresa empresaSalva = empresaRepository.save(empresa);
         return new EmpresaExibicaoDTO(empresaSalva);
     }
 
-    public EmpresaExibicaoDTO buscarPorCnpj(String cnpj) {
-        Optional<Empresa> empresaOptional = empresaRepository.findByCnpj(cnpj);
+    public EmpresaExibicaoDTO buscarPorId(Long id) {
+        Optional<Empresa> empresaOptional = empresaRepository.findById(id);
 
         if (empresaOptional.isPresent()) {
             return new EmpresaExibicaoDTO(empresaOptional.get());
@@ -68,13 +72,13 @@ public class EmpresaService {
         }
     }
 
-    public void deletar(String cnpj) {
-        Optional<Empresa> empresaOptional = empresaRepository.findByCnpj(cnpj);
+    public void deletar(Long id) {
+        Optional<Empresa> empresaOptional = empresaRepository.findById(id);
 
         if (empresaOptional.isPresent()) {
             empresaRepository.delete(empresaOptional.get());
         } else {
-            throw new EmpresaNotFoundException("CNPJ não encontrado.");
+            throw new EmpresaNotFoundException("Empresa não encontrada.");
         }
     }
 

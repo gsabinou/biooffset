@@ -23,6 +23,8 @@ public class EmpresaController {
     @Autowired
     private EmpresaService empresaService;
 
+    // Esse endpoint apenas foi usado durante o desenvolvimento, neste ponto
+    // é muito mais viável usar o /auth/register, localizado no AuthController.
     @PostMapping("/empresas")
     @ResponseStatus(HttpStatus.CREATED)
     public EmpresaExibicaoDTO criar(@Valid @RequestBody EmpresaCadastroDTO empresaDTO) {
@@ -36,11 +38,11 @@ public class EmpresaController {
         return empresaService.listarTodas(paginacao);
     }
 
-    @GetMapping("/empresas/{cnpj}")
+    @GetMapping("/empresas/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<EmpresaExibicaoDTO> buscarPorCnpj(
-            @PathVariable String cnpj) {
-        return ResponseEntity.ok(empresaService.buscarPorCnpj(cnpj));
+    public ResponseEntity<EmpresaExibicaoDTO> buscarPorId(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(empresaService.buscarPorId(id));
     }
 
     @PutMapping("/empresas")
@@ -50,10 +52,10 @@ public class EmpresaController {
         return ResponseEntity.ok(empresaService.atualizar(empresaDTO));
     }
 
-    @DeleteMapping("/empresas/{cnpj}")
+    @DeleteMapping("/empresas/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar(@PathVariable String cnpj) {
-        empresaService.deletar(cnpj);
+    public void deletar(@PathVariable Long id) {
+        empresaService.deletar(id);
     }
 
     @GetMapping(value = "/empresas/projetos/{id}")

@@ -4,6 +4,7 @@ import br.com.fiap.biooffset.model.EmpresaRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+// import org.hibernate.validator.constraints.br.CNPJ;
 
 public record EmpresaCadastroDTO(
         Long id,
@@ -13,6 +14,7 @@ public record EmpresaCadastroDTO(
 
         @NotBlank(message = "É obrigatório informar o CNPJ.")
         @Size(min = 14, max = 14, message = "Por favor, informe um CNPJ válido.")
+        // @CNPJ(message = "Informe um CNPj válido.")
         String cnpj,
 
         @NotBlank(message = "Escolha uma senha.")
