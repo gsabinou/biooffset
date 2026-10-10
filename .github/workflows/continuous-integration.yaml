@@ -1,0 +1,27 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Git checkout
+        uses: actions/checkout@v4
+
+      -   name: Setup da SDK do Java
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: '21'
+      -   name: Testes unitários
+          run: mvn test
+          env:
+            URL: ${{ secrets.DB_URL }}
+            USER: ${{ secrets.DB_USER }}
+            SENHA: ${{ secrets.DB_SENHA }}
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
