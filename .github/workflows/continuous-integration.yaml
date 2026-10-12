@@ -19,7 +19,7 @@ jobs:
             distribution: 'temurin'
             java-version: '21'
       -   name: Testes unitários
-          run: mvn test
+          run: mvn test -Dspring.profiles.active=test
           env:
             URL: ${{ secrets.DB_URL }}
             USER: ${{ secrets.DB_USER }}
