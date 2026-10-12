@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/creditos-carbono").hasAnyRole("COMPRADOR", "DESENVOLVEDOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/projetos").hasAnyRole("COMPRADOR", "DESENVOLVEDOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/projetos/creditos/").hasAnyRole("COMPRADOR", "DESENVOLVEDOR", "ADMIN")
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(verificarToken, UsernamePasswordAuthenticationFilter.class)
